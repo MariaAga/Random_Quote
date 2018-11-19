@@ -1,0 +1,45 @@
+class QuoteBox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { quote: 'Quote', author: 'Author' };
+    this.getQuote();
+  }
+
+  getQuote = () => {
+    axios
+      .get(
+        'https://gist.githubusercontent.com/MariaAga/c5d3b77980626dfe15a350c73bdd982b/raw/8d9f0e9626b7f856facea271b34572be6000fd64/potter_quotes.json'
+      )
+      .then(res => res.data)
+      .then(res => {
+        if (res) {
+          const q = res[Math.floor(Math.random() * res.length - 1)];
+          console.log(q);
+          this.setState({ quote: q.quote, author: q.author });
+        }
+      });
+  };
+  render() {
+    return (
+      <div id="quote-box">
+        <label id="text">" {this.state.quote} "</label>
+        <label id="author">-Said by {this.state.author}</label>
+        <div class="quote-footer">
+          <span >
+            <button  id="new-quote" onClick={this.getQuote}> New Quote </button>
+          </span>
+          <a
+            id="tweet-quote"
+            href={`https://twitter.com/intent/tweet?text=\"${
+              this.state.quote
+            }\" -Said by ${this.state.author} `}
+          >
+            <i class="fa fa-twitter fa-10x" />
+          </a>
+        </div>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<QuoteBox />, document.getElementById('quote'));
